@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastro de Cliente — Grupo Cipriano Ayala</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ca-blue: #0090FF;
+    --ca-blue-dark: #0070CC;
+    --ca-blue-light: #E6F4FF;
+    --ca-blue-pale: #F0F8FF;
+    --ca-black: #0A0A0A;
+    --ca-dark: #1A1A2E;
+    --bg: #F4F6F9;
+    --surface: #FFFFFF;
+    --surface2: #F8FAFC;
+    --border: #E2E8F0;
+    --border-focus: #0090FF;
+    --text: #1A202C;
+    --text-muted: #718096;
+    --text-label: #4A5568;
+    --success: #1a6b3c;
+    --success-bg: #eaf5ef;
+    --success-border: #a3d4b5;
+    --error: #c0392b;
+    --error-bg: #fdf0ee;
+    --error-border: #f0a89e;
+    --warn-bg: #FFF8E1;
+    --warn-border: #FFD54F;
+    --warn-text: #7A5800;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    --shadow-card: 0 2px 8px rgba(0,144,255,0.06), 0 8px 24px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--ca-black);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(0,144,255,0.2);
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo-svg {
+    width: 44px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .logo-text span {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  .header-badge {
+    background: rgba(0,144,255,0.15);
+    border: 1px solid rgba(0,144,255,0.3);
+    color: var(--ca-blue);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--ca-black) 0%, #0D1B35 100%);
+    padding: 52px 24px 48px;
+    text-align: center;
+    border-bottom: 3px solid var(--ca-blue);
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ca-blue);
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* PROGRESS */
+  .progress-bar {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px 24px 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .prog-step {
+    flex: 1;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--border);
+    transition: background .3s;
+  }
+  .prog-step.done { background: var(--ca-blue); }
+  .prog-step.active { background: linear-gradient(90deg, var(--ca-blue), #66C3FF); }
+  .prog-labels {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 8px 24px 0;
+    display: flex;
+    gap: 8px;
+  }
+  .prog-label {
+    flex: 1;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    transition: color .3s;
+  }
+  .prog-label.active { color: var(--ca-blue); }
+  .prog-label.done { color: var(--success); }
+
+  /* WRAPPER */
+  .wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    padding: 28px;
+    margin-bottom: 20px;
+    transition: box-shadow .2s;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--ca-blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .card-icon svg { width: 18px; height: 18px; }
+  .card-header-text {}
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .card-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  /* GRID */
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .col-span-2 { grid-column: span 2; }
+  @media (max-width: 600px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .col-span-2 { grid-column: span 1; }
+  }
+
+  /* FIELD */
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-label);
+    letter-spacing: 0.01em;
+  }
+  .field label .req { color: var(--error); margin-left: 2px; }
+  .field label .auto-tag {
+    background: var(--ca-blue-light);
+    color: var(--ca-blue-dark);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    letter-spacing: 0.03em;
+  }
+
+  .field input, .field select, .field textarea {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s, background .2s;
+    -webkit-appearance: none;
+  }
+  .field textarea {
+    height: auto;
+    padding: 12px 14px;
+    resize: vertical;
+    min-height: 80px;
+  }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23718096' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--ca-blue);
+    box-shadow: 0 0 0 3px rgba(0,144,255,0.12);
+  }
+  .field input::placeholder { color: #B0BEC5; }
+  .field input:disabled, .field select:disabled {
+    background: var(--surface2);
+    color: var(--text-muted);
+    cursor: default;
+  }
+  .field input.auto-filled {
+    background: var(--ca-blue-pale);
+    border-color: rgba(0,144,255,0.4);
+    color: var(--ca-dark);
+    font-weight: 500;
+  }
+  .field input.auto-filled:focus {
+    border-color: var(--ca-blue);
+    box-shadow: 0 0 0 3px rgba(0,144,255,0.12);
+  }
+  .field-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  /* CNPJ ROW */
+  .cnpj-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+  .cnpj-wrap { position: relative; }
+  .cnpj-wrap input {
+    font-family: 'Inter', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding-right: 46px;
+  }
+  .cnpj-spinner {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--ca-blue);
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    display: none;
+  }
+  .cnpj-spinner.show { display: block; }
+  @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+  .btn-buscar {
+    height: 44px;
+    padding: 0 20px;
+    background: var(--ca-blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, transform .1s, opacity .15s;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-buscar:hover { background: var(--ca-blue-dark); }
+  .btn-buscar:active { transform: scale(0.97); }
+  .btn-buscar:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+  .btn-buscar svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* STATUS BANNER */
+  .banner {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 12px;
+  }
+  .banner.show { display: flex; }
+  .banner.success { background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success); }
+  .banner.error { background: var(--error-bg); border: 1px solid var(--error-border); color: var(--error); }
+  .banner.warn { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); }
+  .banner svg { flex-shrink: 0; margin-top: 1px; width: 16px; height: 16px; }
+  .banner strong { font-weight: 600; }
+
+  /* EMPRESA HIGHLIGHT */
+  .empresa-card {
+    display: none;
+    background: var(--ca-blue-light);
+    border: 1px solid rgba(0,144,255,0.25);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-top: 12px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .empresa-card.show { display: flex; }
+  .empresa-nome { font-weight: 700; font-size: 15px; color: var(--ca-dark); }
+  .empresa-fantasia { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .situacao-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .situacao-pill.ativa { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+  .situacao-pill.inapta { background: var(--error-bg); color: var(--error); border: 1px solid var(--error-border); }
+  .situacao-pill.suspensa { background: var(--warn-bg); color: var(--warn-text); border: 1px solid var(--warn-border); }
+  .situacao-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* SECTION LOCK */
+  .section-locked {
+    opacity: 0.38;
+    pointer-events: none;
+    transition: opacity .35s;
+  }
+  .section-locked.unlocked { opacity: 1; pointer-events: all; }
+  .lock-msg {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .lock-msg.hide { display: none; }
+  .lock-msg svg { width: 12px; height: 12px; }
+
+  /* UPLOAD AREA */
+  .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .upload-grid { grid-template-columns: 1fr; } }
+
+  .upload-item {
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    transition: border-color .2s, background .2s;
+    background: var(--surface2);
+    cursor: pointer;
+    position: relative;
+  }
+  .upload-item:hover { border-color: var(--ca-blue); background: var(--ca-blue-pale); }
+  .upload-item.has-file { border-color: var(--success-border); background: var(--success-bg); border-style: solid; }
+  .upload-item.required-doc .upload-label::after { content: ' *'; color: var(--error); }
+
+  .upload-item input[type=file] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  .upload-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-label);
+    display: block;
+    margin-bottom: 4px;
+    pointer-events: none;
+    line-height: 1.4;
+  }
+  .upload-status {
+    font-size: 11px;
+    color: var(--text-muted);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .upload-item.has-file .upload-status { color: var(--success); }
+  .upload-icon { pointer-events: none; margin-bottom: 2px; }
+
+  /* TIPO PROJETO */
+  .radio-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  .radio-opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-label);
+    flex: 1;
+    min-width: 120px;
+  }
+  .radio-opt:hover { border-color: var(--ca-blue); background: var(--ca-blue-pale); }
+  .radio-opt input[type=radio] { display: none; }
+  .radio-opt.selected { border-color: var(--ca-blue); background: var(--ca-blue-light); color: var(--ca-blue-dark); }
+  .radio-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .radio-dot::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    display: none;
+  }
+  .radio-opt.selected .radio-dot::after { display: block; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* SUBMIT */
+  .submit-area {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow-card);
+  }
+  .submit-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 460px;
+  }
+  .submit-note strong { color: var(--text); }
+
+  .btn-submit {
+    height: 50px;
+    padding: 0 36px;
+    background: var(--ca-blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+    transition: background .15s, transform .1s, opacity .15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .btn-submit:hover { background: var(--ca-blue-dark); }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-submit .spin {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin2 .6s linear infinite;
+    display: none;
+  }
+  .btn-submit.loading .spin { display: block; }
+  .btn-submit.loading .btn-label { display: none; }
+  @keyframes spin2 { to { transform: rotate(360deg); } }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 24px;
+  }
+  .success-screen.show { display: block; }
+  .success-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--success-bg);
+    border: 2px solid var(--success-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+  }
+  .success-screen h2 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .success-screen p { font-size: 14px; color: var(--text-muted); line-height: 1.7; max-width: 420px; margin: 0 auto; }
+  .btn-novo {
+    margin-top: 28px;
+    height: 44px;
+    padding: 0 28px;
+    background: var(--ca-blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-novo:hover { background: var(--ca-blue-dark); }
+
+  /* FOOTER */
+  .site-footer {
+    background: var(--ca-black);
+    padding: 20px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 20px;
+  }
+  .site-footer p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.02em;
+  }
+  .site-footer a { color: var(--ca-blue); text-decoration: none; }
+  .site-footer a:hover { text-decoration: underline; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card { animation: fadeUp .3s ease both; }
+  .card:nth-child(1) { animation-delay: .04s; }
+  .card:nth-child(2) { animation-delay: .08s; }
+  .card:nth-child(3) { animation-delay: .12s; }
+  .card:nth-child(4) { animation-delay: .16s; }
+  .card:nth-child(5) { animation-delay: .20s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-area">
+      <svg class="logo-svg" viewBox="0 0 88 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M44 0C33.5 0 25 8.5 25 19C25 24.3 27.2 29.1 30.8 32.5C27.2 35.9 25 40.7 25 46C25 56.5 33.5 65 44 65C54.5 65 63 56.5 63 46C63 40.7 60.8 35.9 57.2 32.5C60.8 29.1 63 24.3 63 19C63 8.5 54.5 0 44 0ZM44 27C40.1 27 37 23.9 37 20C37 16.1 40.1 13 44 13C47.9 13 51 16.1 51 20C51 23.9 47.9 27 44 27ZM44 52C40.1 52 37 48.9 37 45C37 41.1 40.1 38 44 38C47.9 38 51 41.1 51 45C51 48.9 47.9 52 44 52Z" fill="#0090FF"/>
+        <path d="M12 19C12 10.7 17.5 3.7 25 1.2C18.5 4.8 14 12 14 20.2C14 28.4 18.5 35.5 25 39.2C17.5 36.7 12 29.3 12 19Z" fill="#0090FF" opacity="0.5"/>
+        <path d="M76 19C76 10.7 70.5 3.7 63 1.2C69.5 4.8 74 12 74 20.2C74 28.4 69.5 35.5 63 39.2C70.5 36.7 76 29.3 76 19Z" fill="#0090FF" opacity="0.5"/>
+      </svg>
+      <div class="logo-text">
+        Grupo Cipriano Ayala
+        <span>Escritório de Projetos Sociais</span>
+      </div>
+    </div>
+    <div class="header-badge">Cadastro Oficial</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Grupo Cipriano Ayala — EPS</div>
+  <h1>Cadastro de Cliente</h1>
+  <p>Preencha o CNPJ para preenchimento automático dos dados da Receita Federal. Complete os demais campos e anexe as certidões solicitadas.</p>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar" id="progressBar">
+  <div class="prog-step active" id="prog1"></div>
+  <div class="prog-step" id="prog2"></div>
+  <div class="prog-step" id="prog3"></div>
+  <div class="prog-step" id="prog4"></div>
+  <div class="prog-step" id="prog5"></div>
+</div>
+<div class="prog-labels">
+  <div class="prog-label active" id="plabel1">Identificação</div>
+  <div class="prog-label" id="plabel2">Empresa</div>
+  <div class="prog-label" id="plabel3">Projeto</div>
+  <div class="prog-label" id="plabel4">Contato</div>
+  <div class="prog-label" id="plabel5">Documentos</div>
+</div>
+
+<div class="wrapper">
+<div id="formArea">
+
+<!-- CARD 1: CNPJ -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/>
+      </svg>
+    </div>
+    <div class="card-header-text">
+      <div class="card-title">Identificação da Empresa</div>
+      <div class="card-subtitle">Informe o CNPJ para preenchimento automático via Receita Federal</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="cnpj">CNPJ <span class="req">*</span></label>
+    <div class="cnpj-row">
+      <div class="cnpj-wrap">
+        <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" maxlength="18" autocomplete="off" inputmode="numeric">
+        <div class="cnpj-spinner" id="cnpjSpinner"></div>
+      </div>
+      <button class="btn-buscar" id="btnBuscar" type="button" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Consultar
+      </button>
+    </div>
+    <div class="field-hint">Digite os 14 dígitos — os campos serão preenchidos automaticamente</div>
+  </div>
+
+  <div class="banner" id="cnpjBanner">
+    <svg viewBox="0 0 16 16" fill="none" id="bannerIcon"></svg>
+    <div><strong id="bannerTitle"></strong> <span id="bannerMsg"></span></div>
+  </div>
+
+  <div class="empresa-card" id="empresaCard">
+    <div>
+      <div class="empresa-nome" id="empresaNome"></div>
+      <div class="empresa-fantasia" id="empresaFantasia"></div>
+    </div>
+    <div id="situacaoPill"></div>
+  </div>
+</div>
+
+<!-- CARD 2: Dados da empresa -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </div>
+    <div class="card-header-text">
+      <div class="card-title">Dados da Empresa</div>
+      <div class="card-subtitle">Preenchidos automaticamente — você pode editar se necessário</div>
+    </div>
+  </div>
+
+  <div class="lock-msg" id="lockMsg1">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="7" width="8" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" stroke-linecap="round"/></svg>
+    Consulte o CNPJ acima para desbloquear
+  </div>
+
+  <div class="section-locked" id="sec2">
+    <div class="grid">
+      <div class="field">
+        <label for="razaoSocial">Razão Social <span class="req">*</span> <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="razaoSocial" name="razaoSocial" placeholder="—" disabled>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-top:14px">
+      <div class="field">
+        <label for="nomeFantasia">Nome Fantasia <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="nomeFantasia" name="nomeFantasia" placeholder="—" disabled>
+      </div>
+      <div class="field">
+        <label for="naturezaJuridica">Natureza Jurídica <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="naturezaJuridica" name="naturezaJuridica" placeholder="—" disabled>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-top:14px">
+      <div class="field">
+        <label for="atividadePrincipal">Atividade Principal (CNAE) <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="atividadePrincipal" name="atividadePrincipal" placeholder="—" disabled>
+      </div>
+      <div class="field">
+        <label for="dataAbertura">Data de Abertura <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="dataAbertura" name="dataAbertura" placeholder="—" disabled>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="grid grid-2">
+      <div class="field">
+        <label for="cep">CEP <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="cep" name="cep" placeholder="—" disabled>
+      </div>
+      <div class="field">
+        <label for="logradouro">Logradouro <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="logradouro" name="logradouro" placeholder="—" disabled>
+      </div>
+    </div>
+    <div class="grid grid-3" style="margin-top:14px">
+      <div class="field">
+        <label for="numero">Número <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="numero" name="numero" placeholder="—" disabled>
+      </div>
+      <div class="field">
+        <label for="complemento">Complemento <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="complemento" name="complemento" placeholder="—" disabled>
+      </div>
+      <div class="field">
+        <label for="bairro">Bairro <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="bairro" name="bairro" placeholder="—" disabled>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-top:14px">
+      <div class="field">
+        <label for="municipio">Município <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="municipio" name="municipio" placeholder="—" disabled>
+      </div>
+      <div class="field">
+        <label for="uf">UF <span class="auto-tag">AUTO</span></label>
+        <input type="text" id="uf" name="uf" placeholder="—" disabled>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-top:14px">
+      <div class="field">
+        <label for="inscricaoEstadual">Inscrição Estadual</label>
+        <input type="text" id="inscricaoEstadual" name="inscricaoEstadual" placeholder="Informe se aplicável" disabled>
+      </div>
+      <div class="field">
+        <label for="inscricaoMunicipal">Inscrição Municipal</label>
+        <input type="text" id="inscricaoMunicipal" name="inscricaoMunicipal" placeholder="Informe se aplicável" disabled>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-top:14px">
+      <div class="field">
+        <label for="nire">NIRE — Se aplicável</label>
+        <input type="text" id="nire" name="nire" placeholder="—" disabled>
+      </div>
+      <div class="field">
+        <label for="regimeTributario">Regime Tributário <span class="req">*</span></label>
+        <select id="regimeTributario" name="regimeTributario" disabled>
+          <option value="">Selecione…</option>
+          <option>Simples Nacional</option>
+          <option>Lucro Presumido</option>
+          <option>Lucro Real</option>
+          <option>MEI</option>
+          <option>Imune / Isento</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-top:14px">
+      <div class="field">
+        <label for="website">Website da empresa</label>
+        <input type="url" id="website" name="website" placeholder="https://" disabled>
+      </div>
+      <div class="field">
+        <label for="grupoEmpresa">Grupo de Empresas</label>
+        <select id="grupoEmpresa" name="grupoEmpresa" disabled>
+          <option value="">Selecione…</option>
+          <option>Geral</option>
+          <option>Parceiro Estratégico</option>
+          <option>Fornecedor</option>
+          <option>Associação / ONG</option>
+          <option>Entidade Pública</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 3: Dados do projeto -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    </div>
+    <div class="card-header-text">
+      <div class="card-title">Dados do Projeto</div>
+      <div class="card-subtitle">Informações sobre o projeto e contrato</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Tipo de Projeto <span class="req">*</span></label>
+    <div class="radio-group" id="tipoProjetoGroup">
+      <label class="radio-opt" onclick="selectRadio(this,'tipoProjeto','Saúde')">
+        <input type="radio" name="tipoProjeto" value="Saúde">
+        <div class="radio-dot"></div>
+        Saúde
+      </label>
+      <label class="radio-opt" onclick="selectRadio(this,'tipoProjeto','Projetos Sociais')">
+        <input type="radio" name="tipoProjeto" value="Projetos Sociais">
+        <div class="radio-dot"></div>
+        Projetos Sociais
+      </label>
+      <label class="radio-opt" onclick="selectRadio(this,'tipoProjeto','Educação')">
+        <input type="radio" name="tipoProjeto" value="Educação">
+        <div class="radio-dot"></div>
+        Educação
+      </label>
+      <label class="radio-opt" onclick="selectRadio(this,'tipoProjeto','Outro')">
+        <input type="radio" name="tipoProjeto" value="Outro">
+        <div class="radio-dot"></div>
+        Outro
+      </label>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="field">
+      <label for="valorContrato">Valor do Contrato (R$)</label>
+      <input type="text" id="valorContrato" name="valorContrato" placeholder="0,00" inputmode="numeric">
+    </div>
+    <div class="field">
+      <label for="valorEmenda">Valor da Emenda (R$)</label>
+      <input type="text" id="valorEmenda" name="valorEmenda" placeholder="0,00" inputmode="numeric">
+    </div>
+  </div>
+</div>
+
+<!-- CARD 4: Contato -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+    <div class="card-header-text">
+      <div class="card-title">Contatos da Entidade</div>
+      <div class="card-subtitle">Dados do responsável legal e contato principal</div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="field">
+      <label for="responsavel">Responsável Legal <span class="req">*</span></label>
+      <input type="text" id="responsavel" name="responsavel" placeholder="Nome completo">
+    </div>
+    <div class="field">
+      <label for="cpfResponsavel">CPF do Responsável</label>
+      <input type="text" id="cpfResponsavel" name="cpfResponsavel" placeholder="000.000.000-00" maxlength="14" inputmode="numeric">
+    </div>
+  </div>
+  <div class="grid grid-2" style="margin-top:14px">
+    <div class="field">
+      <label for="email">E-mail do Responsável <span class="req">*</span></label>
+      <input type="email" id="email" name="email" placeholder="email@empresa.com.br">
+    </div>
+    <div class="field">
+      <label for="telefone">Telefone(s) <span class="req">*</span></label>
+      <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000">
+    </div>
+  </div>
+</div>
+
+<!-- CARD 5: Documentos -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
+      </svg>
+    </div>
+    <div class="card-header-text">
+      <div class="card-title">Documentações da Entidade</div>
+      <div class="card-subtitle">Anexe as certidões nos campos abaixo — PDF ou imagem, máx. 10MB cada</div>
+    </div>
+  </div>
+
+  <div class="banner warn show" style="margin-bottom:16px">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M8 2L14.5 13H1.5L8 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><line x1="8" y1="6.5" x2="8" y2="9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="currentColor"/></svg>
+    <div>Os documentos serão salvos automaticamente em uma pasta com o nome da sua empresa no SharePoint do GCA.</div>
+  </div>
+
+  <div class="upload-grid">
+
+    <div class="upload-item required-doc" id="up1" onclick="triggerUpload('file1')">
+      <input type="file" id="file1" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected(this,'up1','status1')">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-label">Certidão Negativa — Tributos Federais e Dívida Ativa da União</div>
+      <div class="upload-status" id="status1">Clique para selecionar o arquivo</div>
+    </div>
+
+    <div class="upload-item required-doc" id="up2" onclick="triggerUpload('file2')">
+      <input type="file" id="file2" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected(this,'up2','status2')">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-label">Certificado de Regularidade do FGTS (CRF)</div>
+      <div class="upload-status" id="status2">Clique para selecionar o arquivo</div>
+    </div>
+
+    <div class="upload-item required-doc" id="up3" onclick="triggerUpload('file3')">
+      <input type="file" id="file3" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected(this,'up3','status3')">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-label">CNDT — Certidão Negativa de Débitos Trabalhistas</div>
+      <div class="upload-status" id="status3">Clique para selecionar o arquivo</div>
+    </div>
+
+    <div class="upload-item required-doc" id="up4" onclick="triggerUpload('file4')">
+      <input type="file" id="file4" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected(this,'up4','status4')">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-label">Certidão Negativa de Tributos Estaduais</div>
+      <div class="upload-status" id="status4">Clique para selecionar o arquivo</div>
+    </div>
+
+    <div class="upload-item required-doc" id="up5" onclick="triggerUpload('file5')">
+      <input type="file" id="file5" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected(this,'up5','status5')">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-label">Certidão Negativa de Tributos Municipais</div>
+      <div class="upload-status" id="status5">Clique para selecionar o arquivo</div>
+    </div>
+
+    <div class="upload-item required-doc" id="up6" onclick="triggerUpload('file6')">
+      <input type="file" id="file6" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected(this,'up6','status6')">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-label">Certidão de Regularidade no CADIN</div>
+      <div class="upload-status" id="status6">Clique para selecionar o arquivo</div>
+    </div>
+
+    <div class="upload-item required-doc" id="up7" onclick="triggerUpload('file7')">
+      <input type="file" id="file7" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected(this,'up7','status7')">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-label">Certidão de Inidoneidade (TCU)</div>
+      <div class="upload-status" id="status7">Clique para selecionar o arquivo</div>
+    </div>
+
+    <div class="upload-item required-doc" id="up8" onclick="triggerUpload('file8')">
+      <input type="file" id="file8" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected(this,'up8','status8')">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-label">Consulta CEIS — Cadastro de Empresas Inidôneas</div>
+      <div class="upload-status" id="status8">Clique para selecionar o arquivo</div>
+    </div>
+
+    <div class="upload-item required-doc" id="up9" onclick="triggerUpload('file9')">
+      <input type="file" id="file9" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected(this,'up9','status9')">
+      <div class="upload-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0090FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-label">Comprovante de Situação Cadastral do CNPJ</div>
+      <div class="upload-status" id="status9">Clique para selecionar o arquivo</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-area">
+  <div class="submit-note">
+    <strong>Revise todos os dados antes de enviar.</strong><br>
+    Campos com <span style="color:var(--error)">*</span> são obrigatórios. Os documentos serão salvos automaticamente em uma pasta no SharePoint do GCA com o nome da sua empresa.
+  </div>
+  <button class="btn-submit" id="btnSubmit" type="button">
+    <div class="spin"></div>
+    <span class="btn-label">Enviar Cadastro</span>
+  </button>
+</div>
+
+</div><!-- /formArea -->
+
+<!-- SUCCESS -->
+<div class="success-screen" id="successScreen">
+  <div class="success-circle">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a6b3c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2>Cadastro enviado com sucesso!</h2>
+  <p id="successMsg">Seus dados e documentos foram recebidos pelo Grupo Cipriano Ayala e serão processados em breve.</p>
+  <button class="btn-novo" onclick="resetForm()">Novo cadastro</button>
+</div>
+
+</div><!-- /wrapper -->
+
+<footer class="site-footer">
+  <p>© 2026 Grupo Cipriano Ayala — Escritório de Projetos Sociais &nbsp;|&nbsp; <a href="https://ciprianoayala.com.br" target="_blank">ciprianoayala.com.br</a></p>
+</footer>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const CONFIG = {
+  // Cole aqui a URL do Power Automate (quando disponível)
+  POWER_AUTOMATE_URL: null,
+  // E-mail de destino para fallback via mailto
+  EMAIL_DESTINO: 'cadastro@ciprianoayala.com.br',
+};
+
+// ============================================================
+// ESTADO
+// ============================================================
+let dadosCNPJ = null;
+let tipoProjetoSelecionado = '';
+
+// ============================================================
+// HELPERS
+// ============================================================
+const $ = id => document.getElementById(id);
+
+function validarCNPJ(c) {
+  if (c.length !== 14 || /^(\d)\1+$/.test(c)) return false;
+  const calc = (str, n) => {
+    let s = 0, p = n;
+    for (let i = 0; i < str.length; i++) { s += parseInt(str[i]) * p--; if (p < 2) p = 9; }
+    const r = s % 11; return r < 2 ? 0 : 11 - r;
+  };
+  return calc(c.slice(0,12), 5) === parseInt(c[12]) && calc(c.slice(0,13), 6) === parseInt(c[13]);
+}
+
+function formatDate(s) {
+  if (!s) return '';
+  const [y, m, d] = s.split('-');
+  return d ? `${d}/${m}/${y}` : s;
+}
+function formatCEP(s) {
+  if (!s) return '';
+  const d = s.replace(/\D/g,'');
+  return d.length === 8 ? `${d.slice(0,5)}-${d.slice(5)}` : s;
+}
+function formatTel(ddd, tel) {
+  if (!ddd || !tel) return '';
+  const t = tel.replace(/\D/g,'');
+  return t.length >= 9 ? `(${ddd}) ${t.slice(0,5)}-${t.slice(5)}` : `(${ddd}) ${t}`;
+}
+
+// ============================================================
+// CNPJ — formatação
+// ============================================================
+$('cnpj').addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g,'').slice(0,14);
+  if (v.length > 12) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,'$1.$2.$3/$4-$5');
+  else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d+)$/,'$1.$2.$3/$4');
+  else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d+)$/,'$1.$2.$3');
+  else if (v.length > 2) v = v.replace(/^(\d{2})(\d+)$/,'$1.$2');
+  e.target.value = v;
+
+  const digits = v.replace(/\D/g,'');
+  const ok = digits.length === 14 && validarCNPJ(digits);
+  $('btnBuscar').disabled = !ok;
+  if (digits.length === 14 && !ok) showBanner('error','CNPJ inválido.','Verifique os dígitos e tente novamente.');
+  else hideBanner();
+  if (digits.length < 14) resetFields();
+});
+
+$('cnpj').addEventListener('keydown', e => { if (e.key === 'Enter' && !$('btnBuscar').disabled) buscarCNPJ(); });
+$('btnBuscar').addEventListener('click', buscarCNPJ);
+
+// ============================================================
+// CONSULTA API RECEITA FEDERAL
+// ============================================================
+async function buscarCNPJ() {
+  const digits = $('cnpj').value.replace(/\D/g,'');
+  if (!validarCNPJ(digits)) return;
+
+  $('btnBuscar').disabled = true;
+  $('btnBuscar').innerHTML = '<div class="cnpj-spinner show" style="position:static;transform:none;display:inline-block"></div> Consultando…';
+  $('cnpjSpinner').classList.add('show');
+  hideBanner();
+  $('empresaCard').classList.remove('show');
+  resetFields();
+
+  try {
+    const res = await fetch(`https://publica.cnpj.ws/cnpj/${digits}`);
+    if (!res.ok) {
+      if (res.status === 404) throw new Error('CNPJ não encontrado na base da Receita Federal.');
+      if (res.status === 429) throw new Error('Muitas consultas em sequência. Aguarde alguns segundos e tente novamente.');
+      throw new Error(`Erro ${res.status}. Tente novamente em instantes.`);
+    }
+    dadosCNPJ = await res.json();
+    preencherFormulario(dadosCNPJ);
+    const sit = dadosCNPJ.estabelecimento?.situacao_cadastral || 'ATIVA';
+    const isBad = sit.toUpperCase().includes('SUSPENS') || sit.toUpperCase().includes('INAPT');
+    if (isBad) {
+      showBanner('warn', 'Atenção —', `Situação cadastral na Receita Federal: ${sit}. Os dados foram preenchidos. Verifique com a equipe GCA antes de prosseguir.`);
+    } else {
+      showBanner('success', 'Dados preenchidos automaticamente.', 'Revise as informações e complete os campos restantes.');
+    }
+  } catch(err) {
+    showBanner('error', 'Não foi possível consultar a Receita Federal.', err.message);
+  } finally {
+    $('cnpjSpinner').classList.remove('show');
+    $('btnBuscar').disabled = false;
+    $('btnBuscar').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Consultar`;
+  }
+}
+
+function preencherFormulario(d) {
+  const est = d.estabelecimento || {};
+  const mun = est.cidade || {};
+  const razao = d.razao_social || '';
+  const fantasia = est.nome_fantasia || '';
+  const sit = est.situacao_cadastral || 'ATIVA';
+
+  setAuto('razaoSocial', razao);
+  setAuto('nomeFantasia', fantasia);
+  setAuto('naturezaJuridica', d.natureza_juridica?.descricao || '');
+  setAuto('atividadePrincipal', `${est.atividade_principal?.subclasse || ''} — ${est.atividade_principal?.descricao || ''}`.trim().replace(/^—\s*/,''));
+  setAuto('dataAbertura', formatDate(est.data_inicio_atividade));
+  setAuto('cep', formatCEP(est.cep));
+  setAuto('logradouro', `${est.tipo_logradouro || ''} ${est.logradouro || ''}`.trim());
+  setAuto('numero', est.numero || 'S/N');
+  setAuto('complemento', est.complemento || '');
+  setAuto('bairro', est.bairro || '');
+  setAuto('municipio', mun.nome || est.municipio || '');
+  setAuto('uf', est.estado?.sigla || est.uf || '');
+  setAuto('telefone', formatTel(est.ddd1, est.telefone1));
+
+  $('empresaNome').textContent = razao;
+  $('empresaFantasia').textContent = fantasia ? `Nome fantasia: ${fantasia}` : '';
+  const cls = sit.toUpperCase() === 'ATIVA' ? 'ativa' : sit.toUpperCase().includes('SUSPENS') ? 'suspensa' : 'inapta';
+  $('situacaoPill').innerHTML = `<span class="situacao-pill ${cls}"><span class="situacao-dot"></span>${sit}</span>`;
+  $('empresaCard').classList.add('show');
+
+  unlockSection();
+  updateProgress();
+}
+
+function setAuto(id, value) {
+  const el = $(id);
+  if (!el) return;
+  el.value = value || '';
+  el.disabled = false;
+  if (value && value.trim()) el.classList.add('auto-filled');
+}
+
+function unlockSection() {
+  $('sec2').classList.add('unlocked');
+  $('lockMsg1').classList.add('hide');
+  $('sec2').querySelectorAll('input,select').forEach(i => i.disabled = false);
+}
+
+function resetFields() {
+  $('sec2').classList.remove('unlocked');
+  $('lockMsg1').classList.remove('hide');
+  $('sec2').querySelectorAll('input,select').forEach(i => { i.value=''; i.disabled=true; i.classList.remove('auto-filled'); });
+  $('empresaCard').classList.remove('show');
+  dadosCNPJ = null;
+}
+
+// ============================================================
+// BANNER
+// ============================================================
+function showBanner(type, title, msg) {
+  const b = $('cnpjBanner');
+  b.className = `banner show ${type}`;
+  $('bannerTitle').textContent = title;
+  $('bannerMsg').textContent = msg;
+  const icons = {
+    success: `<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><polyline points="5 8 7 10 11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>`,
+    error: `<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><line x1="5.5" y1="5.5" x2="10.5" y2="10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="10.5" y1="5.5" x2="5.5" y2="10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>`,
+    warn: `<path d="M8 2L14.5 13H1.5L8 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><line x1="8" y1="6" x2="8" y2="9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="currentColor"/>`,
+  };
+  $('bannerIcon').innerHTML = icons[type] || '';
+}
+function hideBanner() { $('cnpjBanner').className = 'banner'; }
+
+// ============================================================
+// RADIO
+// ============================================================
+function selectRadio(el, name, value) {
+  document.querySelectorAll(`[onclick*="${name}"]`).forEach(l => l.classList.remove('selected'));
+  el.classList.add('selected');
+  tipoProjetoSelecionado = value;
+  updateProgress();
+}
+
+// ============================================================
+// UPLOAD
+// ============================================================
+function triggerUpload(id) { $(id).click(); }
+
+function fileSelected(input, upId, statusId) {
+  const file = input.files[0];
+  const up = $(upId);
+  const st = $(statusId);
+  if (file) {
+    up.classList.add('has-file');
+    st.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ${file.name}`;
+  } else {
+    up.classList.remove('has-file');
+    st.textContent = 'Clique para selecionar o arquivo';
+  }
+  updateProgress();
+}
+
+// ============================================================
+// PROGRESS
+// ============================================================
+function updateProgress() {
+  const steps = [
+    !!dadosCNPJ,
+    !!$('razaoSocial')?.value,
+    !!tipoProjetoSelecionado,
+    !!$('responsavel')?.value && !!$('email')?.value,
+    !!$('file1')?.files[0],
+  ];
+  steps.forEach((done, i) => {
+    const n = i + 1;
+    $(`prog${n}`).className = 'prog-step ' + (done ? 'done' : (i === steps.filter(Boolean).length ? 'active' : ''));
+    $(`plabel${n}`).className = 'prog-label ' + (done ? 'done' : (i === steps.filter(Boolean).length ? 'active' : ''));
+  });
+}
+
+['responsavel','email'].forEach(id => {
+  $(id)?.addEventListener('input', updateProgress);
+});
+
+// ============================================================
+// SUBMIT
+// ============================================================
+$('btnSubmit').addEventListener('click', async () => {
+  const required = [
+    { id: 'razaoSocial', label: 'Razão Social' },
+    { id: 'responsavel', label: 'Responsável Legal' },
+    { id: 'email', label: 'E-mail' },
+    { id: 'telefone', label: 'Telefone' },
+  ];
+  const missing = required.filter(f => !$(f.id)?.value?.trim()).map(f => f.label);
+  if (!tipoProjetoSelecionado) missing.push('Tipo de Projeto');
+  if (!dadosCNPJ) missing.push('CNPJ (consulte a Receita Federal)');
+
+  if (missing.length) {
+    showBanner('error', 'Campos obrigatórios:', missing.join(', ') + '.');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  const btn = $('btnSubmit');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  const payload = {
+    CNPJ: $('cnpj').value,
+    RazaoSocial: $('razaoSocial').value,
+    NomeFantasia: $('nomeFantasia').value,
+    NaturezaJuridica: $('naturezaJuridica').value,
+    AtividadePrincipal: $('atividadePrincipal').value,
+    DataAbertura: $('dataAbertura').value,
+    CEP: $('cep').value,
+    Logradouro: $('logradouro').value,
+    Numero: $('numero').value,
+    Complemento: $('complemento').value,
+    Bairro: $('bairro').value,
+    Municipio: $('municipio').value,
+    UF: $('uf').value,
+    InscricaoEstadual: $('inscricaoEstadual').value,
+    InscricaoMunicipal: $('inscricaoMunicipal').value,
+    NIRE: $('nire').value,
+    RegimeTributario: $('regimeTributario').value,
+    Website: $('website').value,
+    GrupoEmpresa: $('grupoEmpresa').value,
+    TipoProjeto: tipoProjetoSelecionado,
+    ValorContrato: $('valorContrato').value,
+    ValorEmenda: $('valorEmenda').value,
+    Responsavel: $('responsavel').value,
+    CPFResponsavel: $('cpfResponsavel').value,
+    Email: $('email').value,
+    Telefone: $('telefone').value,
+    SituacaoCadastral: dadosCNPJ?.estabelecimento?.situacao_cadastral || '',
+    DataCadastro: new Date().toISOString(),
+  };
+
+  try {
+    if (CONFIG.POWER_AUTOMATE_URL) {
+      // Enviar dados + arquivos via FormData
+      const form = new FormData();
+      form.append('dados', JSON.stringify(payload));
+      const fileIds = ['file1','file2','file3','file4','file5','file6','file7','file8','file9'];
+      const fileLabels = [
+        'CND_Tributos_Federais','CRF_FGTS','CNDT_Trabalho',
+        'CN_Tributos_Estaduais','CN_Tributos_Municipais','CADIN',
+        'Inidoneidade_TCU','CEIS','Situacao_Cadastral_CNPJ'
+      ];
+      fileIds.forEach((fid, i) => {
+        const f = $(fid)?.files[0];
+        if (f) form.append(fileLabels[i], f, f.name);
+      });
+
+      const res = await fetch(CONFIG.POWER_AUTOMATE_URL, { method: 'POST', body: form });
+      if (!res.ok) throw new Error(`Erro ${res.status}`);
+    } else {
+      // DEMO — simula envio
+      await new Promise(r => setTimeout(r, 1800));
+      console.log('Payload:', payload);
+    }
+
+    $('formArea').style.display = 'none';
+    $('progressBar').style.display = 'none';
+    document.querySelector('.prog-labels').style.display = 'none';
+    $('successScreen').classList.add('show');
+    $('successMsg').textContent = `${payload.RazaoSocial} foi cadastrado com sucesso. Uma pasta com seus documentos será criada automaticamente no SharePoint do GCA.`;
+
+  } catch(err) {
+    showBanner('error', 'Erro ao enviar.', err.message + ' — tente novamente ou entre em contato com o GCA.');
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+});
+
+// ============================================================
+// RESET
+// ============================================================
+function resetForm() {
+  $('formArea').style.display = '';
+  $('progressBar').style.display = '';
+  document.querySelector('.prog-labels').style.display = '';
+  $('successScreen').classList.remove('show');
+  document.querySelectorAll('input:not([type=radio]):not([type=file])').forEach(i => { i.value=''; i.classList.remove('auto-filled'); i.disabled=false; });
+  document.querySelectorAll('select').forEach(s => { s.selectedIndex=0; s.disabled=false; });
+  document.querySelectorAll('[type=file]').forEach(f => { f.value=''; });
+  document.querySelectorAll('.upload-item').forEach(u => u.classList.remove('has-file'));
+  document.querySelectorAll('[id^=status]').forEach(s => s.textContent = 'Clique para selecionar o arquivo');
+  document.querySelectorAll('.radio-opt').forEach(r => r.classList.remove('selected'));
+  tipoProjetoSelecionado = '';
+  dadosCNPJ = null;
+  resetFields();
+  hideBanner();
+  $('cnpj').value = '';
+  $('btnBuscar').disabled = true;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// CPF mask
+$('cpfResponsavel').addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g,'').slice(0,11);
+  if (v.length > 9) v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/,'$1.$2.$3-$4');
+  else if (v.length > 6) v = v.replace(/^(\d{3})(\d{3})(\d+)$/,'$1.$2.$3');
+  else if (v.length > 3) v = v.replace(/^(\d{3})(\d+)$/,'$1.$2');
+  e.target.value = v;
+});
+
+updateProgress();
+</script>
+</body>
+</html>
