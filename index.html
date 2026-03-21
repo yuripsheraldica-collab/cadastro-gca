@@ -1157,7 +1157,11 @@ async function buscarCNPJ() {
   resetFields();
 
   try {
-    const res = await fetch(`https://publica.cnpj.ws/cnpj/${digits}`);
+    // Tenta BrasilAPI primeiro, fallback para publica.cnpj.ws
+    let res = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${digits}`);
+    if (!res.ok) {
+      res = await fetch(`https://publica.cnpj.ws/cnpj/${digits}`);
+    }
     if (!res.ok) {
       if (res.status === 404) throw new Error('CNPJ não encontrado na base da Receita Federal.');
       if (res.status === 429) throw new Error('Muitas consultas em sequência. Aguarde alguns segundos e tente novamente.');
@@ -1182,29 +1186,49 @@ async function buscarCNPJ() {
 }
 
 function preencherFormulario(d) {
+  // Suporta BrasilAPI (campos no root) e publica.cnpj.ws (campos em estabelecimento)
+  const isBrasilAPI = !d.estabelecimento;
   const est = d.estabelecimento || {};
-  const mun = est.cidade || {};
-  const razao = d.razao_social || '';
-  const fantasia = est.nome_fantasia || '';
-  const sit = est.situacao_cadastral || 'ATIVA';
 
-  setAuto('razaoSocial', razao);
-  setAuto('nomeFantasia', fantasia);
-  setAuto('naturezaJuridica', d.natureza_juridica?.descricao || '');
-  setAuto('atividadePrincipal', `${est.atividade_principal?.subclasse || ''} — ${est.atividade_principal?.descricao || ''}`.trim().replace(/^—\s*/,''));
-  setAuto('dataAbertura', formatDate(est.data_inicio_atividade));
-  setAuto('cep', formatCEP(est.cep));
-  setAuto('logradouro', `${est.tipo_logradouro || ''} ${est.logradouro || ''}`.trim());
-  setAuto('numero', est.numero || 'S/N');
-  setAuto('complemento', est.complemento || '');
-  setAuto('bairro', est.bairro || '');
-  setAuto('municipio', mun.nome || est.municipio || '');
-  setAuto('uf', est.estado?.sigla || est.uf || '');
-  setAuto('telefone', formatTel(est.ddd1, est.telefone1));
+  const razao    = d.razao_social || '';
+  const fantasia = isBrasilAPI ? (d.nome_fantasia || '') : (est.nome_fantasia || '');
+  const sit      = isBrasilAPI ? (d.descricao_situacao_cadastral || 'ATIVA') : (est.situacao_cadastral || 'ATIVA');
+
+  const cnae = isBrasilAPI
+    ? `${d.cnae_fiscal || ''} — ${d.cnae_fiscal_descricao || ''}`.replace(/^\s*—\s*/,'').trim()
+    : `${est.atividade_principal?.subclasse || ''} — ${est.atividade_principal?.descricao || ''}`.trim().replace(/^—\s*/,'');
+
+  const dtAbertura = isBrasilAPI ? d.data_inicio_atividade : est.data_inicio_atividade;
+  const cepVal   = isBrasilAPI ? d.cep : est.cep;
+  const logr     = isBrasilAPI
+    ? `${d.descricao_tipo_logradouro || ''} ${d.logradouro || ''}`.trim()
+    : `${est.tipo_logradouro || ''} ${est.logradouro || ''}`.trim();
+  const numVal   = isBrasilAPI ? (d.numero || 'S/N') : (est.numero || 'S/N');
+  const complVal = isBrasilAPI ? (d.complemento || '') : (est.complemento || '');
+  const bairroV  = isBrasilAPI ? (d.bairro || '') : (est.bairro || '');
+  const munVal   = isBrasilAPI ? (d.municipio || '') : (est.cidade?.nome || est.municipio || '');
+  const ufVal    = isBrasilAPI ? (d.uf || '') : (est.estado?.sigla || est.uf || '');
+  const telRaw   = isBrasilAPI ? (d.ddd_telefone_1 || '') : `${est.ddd1 || ''}${est.telefone1 || ''}`;
+  const telFmt   = telRaw ? `(${telRaw.slice(0,2)}) ${telRaw.slice(2,7)}-${telRaw.slice(7)}` : '';
+  const natJur   = isBrasilAPI ? (d.natureza_juridica || '') : (d.natureza_juridica?.descricao || '');
+
+  setAuto('razaoSocial',        razao);
+  setAuto('nomeFantasia',       fantasia);
+  setAuto('naturezaJuridica',   natJur);
+  setAuto('atividadePrincipal', cnae);
+  setAuto('dataAbertura',       formatDate(dtAbertura));
+  setAuto('cep',                formatCEP(cepVal));
+  setAuto('logradouro',         logr);
+  setAuto('numero',             numVal);
+  setAuto('complemento',        complVal);
+  setAuto('bairro',             bairroV);
+  setAuto('municipio',          munVal);
+  setAuto('uf',                 ufVal);
+  setAuto('telefone',           telFmt);
 
   $('empresaNome').textContent = razao;
   $('empresaFantasia').textContent = fantasia ? `Nome fantasia: ${fantasia}` : '';
-  const cls = sit.toUpperCase() === 'ATIVA' ? 'ativa' : sit.toUpperCase().includes('SUSPENS') ? 'suspensa' : 'inapta';
+  const cls = sit.toUpperCase().includes('ATIVA') ? 'ativa' : sit.toUpperCase().includes('SUSPENS') ? 'suspensa' : 'inapta';
   $('situacaoPill').innerHTML = `<span class="situacao-pill ${cls}"><span class="situacao-dot"></span>${sit}</span>`;
   $('empresaCard').classList.add('show');
 
