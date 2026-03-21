@@ -802,10 +802,7 @@
           <label>Data do Contrato</label>
           <input type="date" id="data_contrato" />
         </div>
-        <div class="form-group">
-          <label>Link da Pasta no SharePoint</label>
-          <input type="url" id="link_pasta" placeholder="https://..." />
-        </div>
+
       </div>
 
       <div class="nav-wrap">
@@ -1090,8 +1087,12 @@ async function enviarCadastro() {
 
   const g = (id) => (document.getElementById(id) || {}).value || '';
 
+  const cnpjRaw = g('cnpj').replace(/\D/g, ''); // somente números, sem barras
+  const cnpjFormatado = g('cnpj'); // com máscara para exibição
+
   const payload = {
-    CNPJ: g('cnpj'),
+    CNPJ: cnpjFormatado,
+    CNPJ_Numerico: cnpjRaw,
     RazaoSocial: g('razao_social'),
     NomeFantasia: g('nome_fantasia'),
     NaturezaJuridica: g('natureza_juridica'),
@@ -1169,7 +1170,7 @@ async function enviarCadastro() {
       res.innerHTML = `
         <div class="resultado-icon">✅</div>
         <h2>Cadastro enviado com sucesso!</h2>
-        <p>Os dados de <strong>${payload.RazaoSocial || 'sua empresa'}</strong> foram registrados e os documentos estão sendo salvos na pasta do SharePoint.<br><br>Em breve nossa equipe entrará em contato.</p>
+        <p>Os dados de <strong>${payload.RazaoSocial || 'sua empresa'}</strong> foram registrados.</p>
       `;
     } else {
       throw new Error('Erro HTTP ' + resp.status);
